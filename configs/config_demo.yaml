@@ -1,0 +1,43 @@
+# paths
+path_to_data: "../data"
+W: 200 # filter width
+dt: 0.05 # frame length
+device: "cuda:0"
+
+# network params
+in_channels: 1
+out_channels: 1
+padding:
+  - 0
+  - 100
+
+enable_profiling: False # enable Pytorch profiling (False by default)
+with_clipping: False # whether to use clipping instead of softmax (experimental, not used in the paper)
+proj_smoothing_kerwidth: 100 # smoothing kenel width for cosine sim between (experimental, not used in the paper)
+xcorr_padding: 100 # maximum cross-correlation distance (100 by default)
+simpow: 2 # for cosine similarity (experimental, not used in the paper)
+learnable_sigmas: False # (only False is supported, for the second formulation)
+independent_sigmas: False # (only False is supported, for the second formulation)
+sigma: 16.0 # standard deviation of the Gaussians for the second formulation of the method
+clip_mus: True # clips the means of Gaussians to [1, M] (setting to False is experimental)
+
+K: 1 # number of filters (assumed/known sequences)
+
+# lambdas
+TV_l: 200.0 # total variation of the convolution
+filt_TV_l: 0.0 # total variation of the filter response  (experimental, not used in the paper)
+filt_ent_l: 0.0 # filter entropy (experimental, not used in the paper)
+filt_xcor_l: 0.0 # filters' cross-correlation (experimental, not used in the paper)
+proj_sim_cos_l: 0.0 # convolution cosine similarity (experimental, not used in the paper)
+proj_xcorr_l: 0.0 # convolution cross-correlation loss weight (set by overriding this default value)
+loadings_l: 0.0 # additional per-neuron loadings (experimental, not used in the paper)
+
+frame_len_s: 0.050 # length of one timestep, s (based on the data from Rubin et al.)
+
+# number of samples to draw in one iteration to estimate NullDist
+numsamples: 300 # per iteration (at each iter we sample this many filters)
+niter: 50 # how many times to repeat the draws
+
+snapshot_interval: 50 # how often to save the frames for the video
+early_stopping_pc: 1.1 # early stopping threshold (percent true positive. >1 means no early stopping)
+significance_sigmas: 5 # significance level for peak height (in sigmas)

@@ -1,0 +1,21 @@
+# for Arial
+# font.family: "sans-serif"
+# font.sans-serif: "Arial"
+# text.usetex: False
+# for latex:
+font.family: "DejaVu Sans"
+font.serif: "Computer Modern"
+text.usetex: True
+
+# NeurIPS (fontsize = 16)
+lines.linewidth: 3
+xtick.direction: "out"
+ytick.direction: "out"
+axes.labelsize: 16
+xtick.labelsize: 14
+ytick.labelsize: 14
+font.size: 16
+legend.fontsize: 16
+axes.titlesize: 16
+animation.html: "jshtml"
+figure.autolayout: True
