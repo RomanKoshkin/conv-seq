@@ -10,16 +10,12 @@
 You don't have to install _all_ of the dependencies in `requirements.txt`. We just provide the package versions in case you get conflicts or other package-related issues.
 
 
-
-```bash
-cd demo
-```
-
 ## Dataset
 
 Create a synthetic dataset. You can change the sequence parameters: number of neurons in a sequence (`seqlen`), spike dropout (`p_drop`), inter-sequence interval in timesteps (`gap_ts`) and spike timing jitter (`jitter_std`).
 
 ```bash
+cd demo
 python make_dataset.py \
     --seqlen 120 \
     --p_drop 0.1 \
@@ -32,6 +28,7 @@ python make_dataset.py \
 optimize the filters for a given number of epochs:
 
 ```bash
+cd demo
 python demo.py --epochs 4000
 ```
 
