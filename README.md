@@ -8,12 +8,25 @@
 
 Spontaneous neural activity, crucial in memory, learning, and spatial navigation, often manifests itself as repetitive spatiotemporal patterns. Despite their importance, analyzing these patterns in large neural recordings remains challenging due to a lack of efficient and scalable detection methods. Addressing this gap, we introduce convSeq, an unsupervised method that employs backpropagation for optimizing spatiotemporal filters that effectively identify these neural patterns. Our method's performance is validated on various synthetic data and real neural recordings, revealing spike sequences with unprecedented scalability and efficiency. Significantly surpassing existing methods in speed, convSeq sets a new standard for analyzing spontaneous neural activity, potentially advancing our understanding of information processing in neural circuits.
 
-## Installing dependencies
+# Quick start
 
-You don't have to install _all_ of the dependencies in `requirements.txt`. We just provide the package versions in case you get conflicts or other package-related issues.
+> The following steps should work on any hardware, but were only tested on a Linux machine with an A6000 GPU.
+
+## 1 Create the environmentand and activate it 
+
+```bash
+conda create -n conv-seq python=3.7.16
+conda activate conv-seq
+```
+
+## 2 Install the dependencies
+
+```bash
+pip install -r requirements.txt
+```
 
 
-## Dataset
+## 3 Create a simple synthetic dataset
 
 Create a synthetic dataset. You can change the sequence parameters: number of neurons in a sequence (`seqlen`), spike dropout (`p_drop`), inter-sequence interval in timesteps (`gap_ts`) and spike timing jitter (`jitter_std`).
 
@@ -26,7 +39,7 @@ python make_dataset.py \
     --jitter_std 10
 ```
 
-## Filter optimization
+## 4 Run filter optimization
 
 optimize the filters for a given number of epochs:
 
@@ -48,3 +61,17 @@ sh make_vids.sh
 ```
 
 the video will be in the `videos` folder. NOTE: Make sure you have [`ffmpeg`](https://ffmpeg.org/) and [`ffpb`](https://pypi.org/project/ffpb/) installed.
+
+
+# Cite
+
+```
+@inproceedings{
+koshkin2024convseq,
+title={convSeq: Fast and Scalable Method for Detecting Patterns in Spike Data},
+author={Roman Koshkin and Tomoki Fukai},
+booktitle={Forty-first International Conference on Machine Learning},
+year={2024},
+url={https://openreview.net/forum?id=KVa4i4RR1O}
+}
+```
