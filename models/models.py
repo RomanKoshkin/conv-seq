@@ -45,7 +45,8 @@ class SeqNetDirect(nn.Module):
                         self.params.W,
                     ),
                     device=self.params.device,
-                ))
+                )
+            )
 
     def forward(self, X):
 
@@ -70,11 +71,10 @@ class SeqNetDirect(nn.Module):
             out = F.conv2d(
                 X,
                 weight=softmaxed_filt,  # NOTE: using the softmaxed filter
-                padding=self.params.padding,
+                padding=(0, self.params.padding),
                 bias=None,
             )
             FILT = softmaxed_filt.split(dim=0, split_size=1)
             OUT = out.split(dim=1, split_size=1)
 
         return OUT, FILT
-

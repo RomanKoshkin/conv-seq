@@ -12,15 +12,16 @@ class NullDistEstimatorDirect(object):
     def __init__(self, X, params):
 
         self.params = params
-        cprint('NullDistEstimatorDirect', 'yellow', 'on_blue')
+        cprint("NullDistEstimatorDirect", "yellow", "on_blue")
 
         self.Xtorch = torch.from_numpy(X).view(1, 1, params.N, params.Ts).float().to(params.device)
         self.Xtorch.requires_grad_(False)
         self.nulldist = []
         self.sample_means = torch.zeros(size=(self.params.niter, self.params.numsamples), device=self.params.device)
         self.sample_stds = torch.zeros(size=(self.params.niter, self.params.numsamples), device=self.params.device)
-        self.nulldist_full = torch.zeros(size=(self.params.niter, self.params.numsamples, self.params.Ts),
-                                         device=self.params.device)
+        self.nulldist_full = torch.zeros(
+            size=(self.params.niter, self.params.numsamples, self.params.Ts), device=self.params.device
+        )
         self.EPS = 1e-10
 
     def sample(self):
@@ -45,12 +46,15 @@ class NullDistEstimatorDirect(object):
                 # self.filt = self.filt.softmax(dim=-1)
                 softmaxed_filt = self.filt.softmax(dim=-1)
 
-                loadings = torch.randn(size=(
-                    self.params.numsamples,
-                    1,
-                    self.params.N,
-                    1,
-                ), device=self.params.device)
+                loadings = torch.randn(
+                    size=(
+                        self.params.numsamples,
+                        1,
+                        self.params.N,
+                        1,
+                    ),
+                    device=self.params.device,
+                )
 
                 if (self.params.loadings_l > 0) and (self.params.K > 1):
                     softmaxed_filt = softmaxed_filt * loadings.sigmoid()
@@ -60,7 +64,7 @@ class NullDistEstimatorDirect(object):
             out = F.conv2d(
                 self.Xtorch,  # / self.Xtorch.sum(dim=-1, keepdim=True),  # NOTE: normalize by the number of spikes
                 weight=softmaxed_filt,
-                padding=self.params.padding,
+                padding=(0, self.params.padding),
                 bias=None,
             ).squeeze()
 
@@ -68,11 +72,11 @@ class NullDistEstimatorDirect(object):
             sample_mean = out.mean(dim=-1).flatten()
             sample_std = out.std(dim=-1, correction=1).flatten()
 
-        return summedout, sample_mean, sample_std, out[:, :self.params.Ts]
+        return summedout, sample_mean, sample_std, out[:, : self.params.Ts]
 
     def estimate(self, loadnull=False):
         if not loadnull:
-            for i in trange(self.params.niter, desc='Estimating null distribution | ', bar_format=bar_format):
+            for i in trange(self.params.niter, desc="Estimating null distribution | ", bar_format=bar_format):
                 summedout, sample_mean, sample_std, out = self.sample()
                 # print(summedout.shape, sample_mean.shape, sample_std.shape, out.shape)
                 self.nulldist += summedout
@@ -81,7 +85,7 @@ class NullDistEstimatorDirect(object):
                 try:
                     self.nulldist_full[i, :, :] = out
                 except Exception as e:
-                    cprint('Did you set the params.padding right?', color='red', attrs=['bold'])
+                    cprint("Did you set the params.padding right?", color="red", attrs=["bold"])
                     raise e
 
             self.nulldist = torch.stack(self.nulldist).flatten().detach().cpu().numpy()
@@ -94,7 +98,7 @@ class NullDistEstimatorDirect(object):
             #     "q_99": self.q_99
             # }, "../checkpoints/nulldist.torch")
         else:
-            print('loading nulldist')
+            print("loading nulldist")
             d = torch.load("../checkpoints/nulldist.torch")
             self.nulldist = d["null_dist"]
             self.q_1 = d["q_1"]

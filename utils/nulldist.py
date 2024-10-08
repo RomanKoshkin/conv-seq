@@ -27,8 +27,10 @@ class NullDistEstimator(object):
     #     return torch.exp(-torch.pow(self.x_values - mu, 2.) / (2 * torch.pow(sig, 2.)))
 
     def gaussian(self, mus):
-        return torch.exp(-torch.pow(self.x_values.repeat(self.params.N, 1) - mus.unsqueeze(-1), 2.) /
-                         (2 * torch.pow(self.sigma, 2.)))
+        return torch.exp(
+            -torch.pow(self.x_values.repeat(self.params.N, 1) - mus.unsqueeze(-1), 2.0)
+            / (2 * torch.pow(self.sigma, 2.0))
+        )
 
     def sample(self):
         for k in range(self.params.numsamples):
@@ -47,7 +49,7 @@ class NullDistEstimator(object):
         out = F.conv2d(
             self.Xtorch,
             self.filt,
-            padding=self.params.padding,
+            padding=(0, self.params.padding),
         ).squeeze()
         summedout = out.sum(dim=1)
         fullout = out.max(dim=1)[0]
@@ -56,7 +58,7 @@ class NullDistEstimator(object):
 
     def estimate(self, loadnull=False):
         if not loadnull:
-            for i in trange(self.params.niter, desc='Estimating null distribution | '):
+            for i in trange(self.params.niter, desc="Estimating null distribution | "):
                 summedout, fullout = self.sample()
                 self.nulldist += summedout
                 self.nulldist_full += fullout
@@ -64,14 +66,11 @@ class NullDistEstimator(object):
             self.nulldist_full = torch.stack(self.nulldist_full).detach().cpu().numpy()
             self.q_1, self.q_99 = np.quantile(self.nulldist_full, (0.001, self.params.q99))
             torch.save(
-                {
-                    "null_dist": self.nulldist,
-                    "nulldist_full": self.nulldist_full,
-                    "q_1": self.q_1,
-                    "q_99": self.q_99
-                }, "../checkpoints/nulldist.torch")
+                {"null_dist": self.nulldist, "nulldist_full": self.nulldist_full, "q_1": self.q_1, "q_99": self.q_99},
+                "../checkpoints/nulldist.torch",
+            )
         else:
-            print('loading nulldist')
+            print("loading nulldist")
             d = torch.load("../checkpoints/nulldist.torch")
             self.nulldist = d["null_dist"]
             self.nulldist_full = d["nulldist_full"]
