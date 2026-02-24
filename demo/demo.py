@@ -12,6 +12,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 matplotlib.rcParams.update(load_config('../configs/rcparams.yaml'))
+matplotlib.rcParams['text.usetex'] = False
 
 parser = argparse.ArgumentParser(description="demo")
 parser.add_argument("--epochs", type=int, default=None)
@@ -36,7 +37,7 @@ T = Ts * params.dt
 t = np.arange(0, T, params.dt)
 params.N = X_[:, :end].shape[0]
 params.kernel_size = (params.N, params.W)
-params.padding = tuple(params.padding)
+# params.padding = tuple((params.padding, ))
 params.Ts = Ts
 params.N = X_.shape[0]
 params.xlim = X_.shape[1]

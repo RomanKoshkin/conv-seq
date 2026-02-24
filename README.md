@@ -12,17 +12,22 @@ Spontaneous neural activity, crucial in memory, learning, and spatial navigation
 
 > The following steps should work on any hardware, but were only tested on a Linux machine with an A6000 GPU.
 
+## Install `uv` (if you don't have it)
+
+Get `uv` and install it as instructed [here](https://docs.astral.sh/uv/getting-started/installation/).
+
+
+
 ## 1 Create the environmentand and activate it 
 
 ```bash
-conda create -n conv-seq python=3.7.16
-conda activate conv-seq
+uv venv .venv --python=3.10.16 && source .venv/bin/activate
 ```
 
 ## 2 Install the dependencies
 
 ```bash
-pip install -r requirements.txt
+uv pip install -r requirements.txt
 ```
 
 
